@@ -9,6 +9,7 @@ machine, you need to add the certificate manually, otherwise the client will fai
 Beacon Network.
 
 Follow the next steps to download and add the certificate to your Java keystore.
+
 1. Go to the [http://www.startssl.com/certs/ca.pem](http://www.startssl.com/certs/ca.pem) and download the file;
 2. Locate the JRE you are using. You can do that by executing `java -XshowSettings:properties -version` and finding the
 value of the `java.home` property in the output.
