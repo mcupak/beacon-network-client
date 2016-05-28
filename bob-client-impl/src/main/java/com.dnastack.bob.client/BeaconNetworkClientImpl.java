@@ -155,6 +155,10 @@ public class BeaconNetworkClientImpl implements BeaconNetworkClient {
         }
     }
 
+    /**
+     * Checks that the error response contains error status and that this status is known to the client.
+     * Otherwise {@link InternalException} is thrown.
+     */
     private static <T> CallResult<T> createRecognizedErrorResult(ResponseBody errorBody) throws InternalException {
         ErrorDto errorDto = convertToErrorDto(errorBody);
 

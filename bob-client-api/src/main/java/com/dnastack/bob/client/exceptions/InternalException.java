@@ -1,8 +1,9 @@
 package com.dnastack.bob.client.exceptions;
 
 /**
- * This exception is thrown when the Beacon Network client meets an error during communication to the server,
- * receives unknown response from the server, or due to any other internal errors.
+ * This exception is thrown when the Beacon Network client fails to perform a requested operation due to, for example,
+ * errors during communication to the server, unknown response from the server or any other internal errors.<p>
+ * For business errors (operation specific), children of {@link ErrorStatusException} are used.
  *
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0

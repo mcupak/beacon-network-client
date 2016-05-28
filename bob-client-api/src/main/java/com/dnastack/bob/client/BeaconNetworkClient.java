@@ -8,7 +8,9 @@ import com.dnastack.bob.service.dto.*;
 import java.util.List;
 
 /**
- * Beacon Network client.
+ * Beacon Network client API.
+ * All methods throw either business error (operation specific) exceptions or {@link InternalException}
+ * when the client couldn't perform the requested operation correctly due to internal errors.
  *
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
