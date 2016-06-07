@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Artem (tema.voskoboynick@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.dnastack.bob.client;
 
 import com.dnastack.bob.client.exceptions.ForbiddenException;
@@ -5,7 +21,9 @@ import com.dnastack.bob.client.exceptions.InternalException;
 import com.dnastack.bob.client.exceptions.NotFoundException;
 import com.dnastack.bob.client.exceptions.UnexpectedErrorStatusException;
 import com.dnastack.bob.service.dto.*;
+import com.google.common.base.Preconditions;
 import okhttp3.ResponseBody;
+import org.apache.commons.lang3.StringUtils;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -51,32 +69,21 @@ public class BeaconNetworkClientImpl implements BeaconNetworkClient {
         beaconNetworkRetroService = BeaconNetworkRetroServiceFactory.create(serviceBaseUrl);
     }
 
+    @Override
     public List<BeaconDto> getBeacons() throws ForbiddenException, InternalException {
         return executeCallNoErrorsOrForbidden(beaconNetworkRetroService.getBeacons());
     }
 
+    @Override
     public List<OrganizationDto> getOrganizations() throws ForbiddenException, InternalException {
         return executeCallNoErrorsOrForbidden(beaconNetworkRetroService.getOrganizations());
     }
 
-    public List<BeaconResponseDto> getResponses() throws ForbiddenException, InternalException {
-        return executeCallNoErrorsOrForbidden(beaconNetworkRetroService.getResponses());
-    }
+    @Override
+    public BeaconDto getBeacon(String beaconId) throws ForbiddenException, NotFoundException, InternalException {
+        Preconditions.checkArgument(StringUtils.isNotBlank(beaconId), "Beacon id mustn't be null or empty.");
 
-    public List<ChromosomeDto> getChromosomes() throws ForbiddenException, InternalException {
-        return executeCallNoErrorsOrForbidden(beaconNetworkRetroService.getChromosomes());
-    }
-
-    public List<AlleleDto> getAlleles() throws ForbiddenException, InternalException {
-        return executeCallNoErrorsOrForbidden(beaconNetworkRetroService.getAlleles());
-    }
-
-    public List<ReferenceDto> getReferences() throws ForbiddenException, InternalException {
-        return executeCallNoErrorsOrForbidden(beaconNetworkRetroService.getReferences());
-    }
-
-    public BeaconDto getBeacon(String beacon) throws ForbiddenException, NotFoundException, InternalException {
-        CallResult<BeaconDto> callResult = executeCall(beaconNetworkRetroService.getBeacon(beacon));
+        CallResult<BeaconDto> callResult = executeCall(beaconNetworkRetroService.getBeacon(beaconId));
         if (callResult.isSuccessful()) {
             return callResult.okDto;
         }
@@ -89,9 +96,12 @@ public class BeaconNetworkClientImpl implements BeaconNetworkClient {
         }
     }
 
-    public OrganizationDto getOrganization(String organization) throws ForbiddenException, NotFoundException,
+    @Override
+    public OrganizationDto getOrganization(String organizationId) throws ForbiddenException, NotFoundException,
             InternalException {
-        CallResult<OrganizationDto> callResult = executeCall(beaconNetworkRetroService.getOrganization(organization));
+        Preconditions.checkArgument(StringUtils.isNotBlank(organizationId), "Organization id mustn't be null or empty.");
+
+        CallResult<OrganizationDto> callResult = executeCall(beaconNetworkRetroService.getOrganization(organizationId));
         if (callResult.isSuccessful()) {
             return callResult.okDto;
         }
@@ -104,9 +114,43 @@ public class BeaconNetworkClientImpl implements BeaconNetworkClient {
         }
     }
 
-    public BeaconResponseDto getResponse(String response) throws ForbiddenException, NotFoundException,
+    @Override
+    public BeaconResponseDto getResponse(String beaconId, ChromosomeDto chromosome, Integer position, AlleleDto allele,
+                                         ReferenceDto reference) throws ForbiddenException, NotFoundException,
             InternalException {
-        CallResult<BeaconResponseDto> callResult = executeCall(beaconNetworkRetroService.getResponse(response));
+        Preconditions.checkArgument(StringUtils.isNotBlank(beaconId), "Beacon id mustn't be null or empty.");
+        Preconditions.checkNotNull(chromosome, "Chromosome mustn't be null or empty.");
+        Preconditions.checkNotNull(position, "Position mustn't be null or empty.");
+        Preconditions.checkNotNull(allele, "Allele mustn't be null or empty.");
+        Preconditions.checkNotNull(reference, "Reference mustn't be null or empty.");
+
+        CallResult<BeaconResponseDto> callResult = executeCall(beaconNetworkRetroService.getResponse(beaconId, chromosome,
+                position, allele, reference));
+        if (callResult.isSuccessful()) {
+            return callResult.okDto;
+        }
+
+        switch (callResult.errorStatus) {
+            case NOT_FOUND:
+                throw new NotFoundException(callResult.errorMessage);
+            default:
+                throw new UnexpectedErrorStatusException(callResult.rawErrorStatus, callResult.errorMessage);
+        }
+    }
+
+    @Override
+    public List<BeaconResponseDto> getResponses(List<String> beaconsIds, ChromosomeDto chromosome, Integer position,
+                                                AlleleDto allele, ReferenceDto reference) throws ForbiddenException,
+            InternalException, NotFoundException {
+        Preconditions.checkArgument(beaconsIds != null && !beaconsIds.isEmpty(), "Beacons ids mustn't be null or empty.");
+        Preconditions.checkNotNull(chromosome, "Chromosome mustn't be null or empty.");
+        Preconditions.checkNotNull(position, "Position mustn't be null or empty.");
+        Preconditions.checkNotNull(allele, "Allele mustn't be null or empty.");
+        Preconditions.checkNotNull(reference, "Reference mustn't be null or empty.");
+
+        String beaconsIdsList = CommunicationConverter.convertToString(beaconsIds);
+        CallResult<List<BeaconResponseDto>> callResult = executeCall(beaconNetworkRetroService.getResponses(
+                beaconsIdsList, chromosome, position, allele, reference));
         if (callResult.isSuccessful()) {
             return callResult.okDto;
         }
@@ -179,7 +223,7 @@ public class BeaconNetworkClientImpl implements BeaconNetworkClient {
 
     private static ErrorDto convertToErrorDto(ResponseBody responseBody) throws InternalException {
         try {
-            return ErrorResponseConverter.convert(responseBody);
+            return CommunicationConverter.convertToErrorDto(responseBody);
         } catch (IOException e) {
             throw new InternalException("Could not convert the response to error dto", e);
         }

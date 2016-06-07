@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Artem (tema.voskoboynick@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.dnastack.bob.client;
 
 import com.dnastack.bob.client.exceptions.ForbiddenException;
@@ -24,13 +40,10 @@ public interface BeaconNetworkClient {
 
     OrganizationDto getOrganization(String organization) throws ForbiddenException, NotFoundException, InternalException;
 
-    List<BeaconResponseDto> getResponses() throws ForbiddenException, InternalException;
+    List<BeaconResponseDto> getResponses(List<String> beaconsIds, ChromosomeDto chromosome, Integer position,
+                                         AlleleDto allele, ReferenceDto reference) throws ForbiddenException,
+            InternalException, NotFoundException;
 
-    BeaconResponseDto getResponse(String beacon) throws ForbiddenException, NotFoundException, InternalException;
-
-    List<ChromosomeDto> getChromosomes() throws ForbiddenException, InternalException;
-
-    List<AlleleDto> getAlleles() throws ForbiddenException, InternalException;
-
-    List<ReferenceDto> getReferences() throws ForbiddenException, InternalException;
+    BeaconResponseDto getResponse(String beaconId, ChromosomeDto chromosome, Integer position, AlleleDto allele,
+                                  ReferenceDto reference) throws ForbiddenException, NotFoundException, InternalException;
 }
