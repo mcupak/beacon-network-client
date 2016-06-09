@@ -30,26 +30,41 @@ import java.util.List;
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-interface BeaconNetworkRetroService {
-    @GET("beacons")
+public interface BeaconNetworkRetroService {
+    String BEACONS_PATH = "beacons";
+    String ORGANIZATIONS_PATH = "organizations";
+    String RESPONSES_PATH = "responses";
+
+    String BEACONS_IDS_LIST_KEY = "beacon";
+    String CHROMOSOME_KEY = "chrom";
+    String POSITION_KEY = "pos";
+    String ALLELE_KEY = "allele";
+    String REFERENCE_KEY = "ref";
+
+
+    @GET(BEACONS_PATH)
     Call<List<BeaconDto>> getBeacons();
 
-    @GET("beacons/{beaconId}")
+    @GET(BEACONS_PATH + "/{beaconId}")
     Call<BeaconDto> getBeacon(@Path("beaconId") String beaconId);
 
-    @GET("organizations")
+    @GET(ORGANIZATIONS_PATH)
     Call<List<OrganizationDto>> getOrganizations();
 
-    @GET("organizations/{organizationId}")
+    @GET(ORGANIZATIONS_PATH + "/{organizationId}")
     Call<OrganizationDto> getOrganization(@Path("organizationId") String organizationId);
 
-    @GET("responses")
-    Call<List<BeaconResponseDto>> getResponses(@Query("beacon") String beaconsIdsList,
-                                               @Query("chrom") ChromosomeDto chromosome, @Query("pos") Integer position,
-                                               @Query("allele") AlleleDto allele, @Query("ref") ReferenceDto reference);
+    @GET(RESPONSES_PATH)
+    Call<List<BeaconResponseDto>> getResponses(@Query(BEACONS_IDS_LIST_KEY) String beaconsIdsList,
+                                               @Query(ALLELE_KEY) AlleleDto allele,
+                                               @Query(CHROMOSOME_KEY) ChromosomeDto chromosome,
+                                               @Query(POSITION_KEY) Long position,
+                                               @Query(REFERENCE_KEY) ReferenceDto reference);
 
-    @GET("responses/{beaconId}")
-    Call<BeaconResponseDto> getResponse(@Path("beaconId") String beaconId, @Query("chrom") ChromosomeDto chromosome,
-                                        @Query("pos") Integer position, @Query("allele") AlleleDto allele,
-                                        @Query("ref") ReferenceDto reference);
+    @GET(RESPONSES_PATH + "/{beaconId}")
+    Call<BeaconResponseDto> getResponse(@Path("beaconId") String beaconId,
+                                        @Query(ALLELE_KEY) AlleleDto allele,
+                                        @Query(CHROMOSOME_KEY) ChromosomeDto chromosome,
+                                        @Query(POSITION_KEY) Long position,
+                                        @Query(REFERENCE_KEY) ReferenceDto reference);
 }

@@ -25,7 +25,7 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
-class ErrorDto {
+public class ErrorDto {
     private String message;
     private String status;
 }

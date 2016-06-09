@@ -25,7 +25,7 @@ package com.dnastack.bob.client;
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-enum ErrorStatus {
+public enum ErrorStatus {
     FORBIDDEN("403"),
     NOT_FOUND("404");
 
@@ -44,5 +44,10 @@ enum ErrorStatus {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return id;
     }
 }

@@ -34,7 +34,7 @@ import java.lang.annotation.Annotation;
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-class BeaconNetworkRetroServiceFactory {
+public class BeaconNetworkRetroServiceFactory {
     /**
      * JacksonConverterFactory is thread-safe. Can declare it static.
      */

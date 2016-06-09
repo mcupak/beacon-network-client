@@ -40,10 +40,10 @@ public interface BeaconNetworkClient {
 
     OrganizationDto getOrganization(String organization) throws ForbiddenException, NotFoundException, InternalException;
 
-    List<BeaconResponseDto> getResponses(List<String> beaconsIds, ChromosomeDto chromosome, Integer position,
-                                         AlleleDto allele, ReferenceDto reference) throws ForbiddenException,
+    List<BeaconResponseDto> getResponses(List<String> beaconsIds, AlleleDto allele, ChromosomeDto chromosome,
+                                         Long position, ReferenceDto reference) throws ForbiddenException,
             InternalException, NotFoundException;
 
-    BeaconResponseDto getResponse(String beaconId, ChromosomeDto chromosome, Integer position, AlleleDto allele,
+    BeaconResponseDto getResponse(String beaconId, AlleleDto allele, ChromosomeDto chromosome, Long position,
                                   ReferenceDto reference) throws ForbiddenException, NotFoundException, InternalException;
 }

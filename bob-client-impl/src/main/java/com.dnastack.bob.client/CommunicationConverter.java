@@ -27,7 +27,7 @@ import java.util.List;
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-class CommunicationConverter {
+public class CommunicationConverter {
     /**
      * Converter is obtained from JacksonConverterFactory, which is thread-safe
      * and returns thread-safe converters. Can declare it static.
