@@ -55,16 +55,16 @@ public interface BeaconNetworkRetroService {
     Call<OrganizationDto> getOrganization(@Path("organizationId") String organizationId);
 
     @GET(RESPONSES_PATH)
-    Call<List<BeaconResponseDto>> getResponses(@Query(BEACONS_IDS_LIST_KEY) String beaconsIdsList,
-                                               @Query(ALLELE_KEY) AlleleDto allele,
-                                               @Query(CHROMOSOME_KEY) ChromosomeDto chromosome,
+    Call<List<BeaconResponseDto>> getResponses(@Query(CHROMOSOME_KEY) ChromosomeDto chromosome,
                                                @Query(POSITION_KEY) Long position,
-                                               @Query(REFERENCE_KEY) ReferenceDto reference);
+                                               @Query(ALLELE_KEY) AlleleDto allele,
+                                               @Query(REFERENCE_KEY) ReferenceDto reference,
+                                               @Query(BEACONS_IDS_LIST_KEY) String beaconsIdsList);
 
     @GET(RESPONSES_PATH + "/{beaconId}")
     Call<BeaconResponseDto> getResponse(@Path("beaconId") String beaconId,
-                                        @Query(ALLELE_KEY) AlleleDto allele,
                                         @Query(CHROMOSOME_KEY) ChromosomeDto chromosome,
                                         @Query(POSITION_KEY) Long position,
+                                        @Query(ALLELE_KEY) AlleleDto allele,
                                         @Query(REFERENCE_KEY) ReferenceDto reference);
 }

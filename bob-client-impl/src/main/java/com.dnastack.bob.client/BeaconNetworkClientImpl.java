@@ -131,17 +131,17 @@ public class BeaconNetworkClientImpl implements BeaconNetworkClient {
     }
 
     @Override
-    public BeaconResponseDto getResponse(String beaconId, AlleleDto allele, ChromosomeDto chromosome, Long position,
-                                         ReferenceDto reference) throws ForbiddenException, NotFoundException,
+    public BeaconResponseDto getResponse(ChromosomeDto chromosome, Long position, AlleleDto allele,
+                                         ReferenceDto reference, String beaconId) throws ForbiddenException, NotFoundException,
             InternalException {
-        Preconditions.checkArgument(StringUtils.isNotBlank(beaconId), "Beacon id mustn't be null or empty.");
         Preconditions.checkNotNull(chromosome, "Chromosome mustn't be null or empty.");
         Preconditions.checkNotNull(position, "Position mustn't be null or empty.");
         Preconditions.checkNotNull(allele, "Allele mustn't be null or empty.");
         Preconditions.checkNotNull(reference, "Reference mustn't be null or empty.");
+        Preconditions.checkArgument(StringUtils.isNotBlank(beaconId), "Beacon id mustn't be null or empty.");
 
-        CallResult<BeaconResponseDto> callResult = executeCall(beaconNetworkRetroService.getResponse(beaconId, allele,
-                chromosome, position, reference));
+        CallResult<BeaconResponseDto> callResult = executeCall(beaconNetworkRetroService.getResponse(beaconId, chromosome,
+                position, allele, reference));
         if (callResult.isSuccessful()) {
             return callResult.okDto;
         }
@@ -157,10 +157,9 @@ public class BeaconNetworkClientImpl implements BeaconNetworkClient {
     }
 
     @Override
-    public List<BeaconResponseDto> getResponses(List<String> beaconsIds, AlleleDto allele, ChromosomeDto chromosome,
-                                                Long position, ReferenceDto reference) throws ForbiddenException,
+    public List<BeaconResponseDto> getResponses(ChromosomeDto chromosome, Long position, AlleleDto allele,
+                                                ReferenceDto reference, List<String> beaconsIds) throws ForbiddenException,
             InternalException, NotFoundException {
-        Preconditions.checkArgument(beaconsIds != null && !beaconsIds.isEmpty(), "Beacons ids mustn't be null or empty.");
         Preconditions.checkNotNull(chromosome, "Chromosome mustn't be null or empty.");
         Preconditions.checkNotNull(position, "Position mustn't be null or empty.");
         Preconditions.checkNotNull(allele, "Allele mustn't be null or empty.");
@@ -168,7 +167,7 @@ public class BeaconNetworkClientImpl implements BeaconNetworkClient {
 
         String beaconsIdsList = CommunicationConverter.convertToString(beaconsIds);
         CallResult<List<BeaconResponseDto>> callResult = executeCall(beaconNetworkRetroService.getResponses(
-                beaconsIdsList, allele, chromosome, position, reference));
+                chromosome, position, allele, reference, beaconsIdsList));
         if (callResult.isSuccessful()) {
             return callResult.okDto;
         }

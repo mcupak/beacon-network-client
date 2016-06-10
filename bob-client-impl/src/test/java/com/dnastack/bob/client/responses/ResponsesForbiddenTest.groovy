@@ -37,11 +37,11 @@ import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown
 class ResponsesForbiddenTest extends BaseMockedBobTest {
     void setupMappings() {
         MOCK_BOB_SERVER.stubFor(get(urlPathEqualTo("/$RESPONSES_PATH"))
-                .withQueryParam(BEACONS_IDS_LIST_KEY, equalTo(CommunicationConverter.convertToString(TEST_RESPONSES.beacon.id as List)))
-                .withQueryParam(ALLELE_KEY, equalTo(TEST_RESPONSES.query.first().allele))
                 .withQueryParam(CHROMOSOME_KEY, equalTo(TEST_RESPONSES.query.first().chromosome.toString()))
                 .withQueryParam(POSITION_KEY, equalTo(TEST_RESPONSES.query.first().position.toString()))
+                .withQueryParam(ALLELE_KEY, equalTo(TEST_RESPONSES.query.first().allele))
                 .withQueryParam(REFERENCE_KEY, equalTo(TEST_RESPONSES.query.first().reference.toString()))
+                .withQueryParam(BEACONS_IDS_LIST_KEY, equalTo(CommunicationConverter.convertToString(TEST_RESPONSES.beacon.id as List)))
 
                 .willReturn(aResponse()
                 .withStatus(HttpStatus.SC_FORBIDDEN)
@@ -51,11 +51,12 @@ class ResponsesForbiddenTest extends BaseMockedBobTest {
 
     void doTest() {
         try {
-            CLIENT.getResponses(TEST_RESPONSES.beacon.id as List,
-                    AlleleDto.fromString(TEST_RESPONSES.query.first().allele),
+            CLIENT.getResponses(
                     TEST_RESPONSES.query.first().chromosome,
                     TEST_RESPONSES.query.first().position,
-                    TEST_RESPONSES.query.first().reference)
+                    AlleleDto.fromString(TEST_RESPONSES.query.first().allele),
+                    TEST_RESPONSES.query.first().reference,
+                    TEST_RESPONSES.beacon.id as List)
             failBecauseExceptionWasNotThrown(ForbiddenException.class)
         } catch (Throwable thrown) {
             assertThat(thrown).isInstanceOf(ForbiddenException.class)

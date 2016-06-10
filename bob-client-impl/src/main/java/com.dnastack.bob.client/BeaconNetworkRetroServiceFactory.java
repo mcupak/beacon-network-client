@@ -26,6 +26,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.lang.annotation.Annotation;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class is responsible for configuring and creating actual Beacon Network http clients that will be communicating
@@ -43,13 +44,16 @@ public class BeaconNetworkRetroServiceFactory {
 
     /**
      * OkHttpClient is thread-safe. Can declare it static.
+     * Set read timeout to 5 minutes as querying beacons may take quite a long time.
      */
-    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder().addNetworkInterceptor(chain -> {
-        Request request = chain.request().newBuilder()
-                .addHeader("Accept", "application/json")
-                .build();
-        return chain.proceed(request);
-    }).build();
+    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
+            .readTimeout(5, TimeUnit.MINUTES)
+            .addNetworkInterceptor(chain -> {
+                Request request = chain.request().newBuilder()
+                        .addHeader("Accept", "application/json")
+                        .build();
+                return chain.proceed(request);
+            }).build();
 
     private BeaconNetworkRetroServiceFactory() {
     }

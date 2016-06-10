@@ -25,25 +25,55 @@ import java.util.List;
 
 /**
  * Beacon Network client API.
- * All methods throw either business error (operation specific) exceptions or {@link InternalException}
- * when the client couldn't perform the requested operation correctly due to internal errors.
+ * All methods throw either operation specific exceptions or {@link InternalException}.
  *
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
 public interface BeaconNetworkClient {
+    /**
+     * Lists available beacons.
+     */
     List<BeaconDto> getBeacons() throws ForbiddenException, InternalException;
 
-    BeaconDto getBeacon(String beacon) throws ForbiddenException, NotFoundException, InternalException;
+    /**
+     * Shows information on the beacon specified by its id.
+     */
+    BeaconDto getBeacon(String beaconId) throws ForbiddenException, NotFoundException, InternalException;
 
+    /**
+     * Lists available organizations.
+     */
     List<OrganizationDto> getOrganizations() throws ForbiddenException, InternalException;
 
-    OrganizationDto getOrganization(String organization) throws ForbiddenException, NotFoundException, InternalException;
+    /**
+     * Shows information on the organization specified by its id.
+     */
+    OrganizationDto getOrganization(String organizationId) throws ForbiddenException, NotFoundException, InternalException;
+    /*specified by chromosome, position,
+            * allele and reference.</p>*/
 
-    List<BeaconResponseDto> getResponses(List<String> beaconsIds, AlleleDto allele, ChromosomeDto chromosome,
-                                         Long position, ReferenceDto reference) throws ForbiddenException,
+    /**
+     * Requests specified beacons information on the specified genetic mutation.<p>
+     * The response on the query will be put in {@link BeaconResponseDto#response}.<p>
+     * {@link BeaconResponseDto#response} - true, when the response is YES.<p>
+     * {@link BeaconResponseDto#response} - false or null, when the response is NO, or the beacon had problems answering
+     * the query.
+     *
+     * @param beaconsIds ids of beacons to request. If not specified, all beacons will be requested.
+     */
+    List<BeaconResponseDto> getResponses(ChromosomeDto chromosome, Long position, AlleleDto allele,
+                                         ReferenceDto reference, List<String> beaconsIds) throws ForbiddenException,
             InternalException, NotFoundException;
 
-    BeaconResponseDto getResponse(String beaconId, AlleleDto allele, ChromosomeDto chromosome, Long position,
-                                  ReferenceDto reference) throws ForbiddenException, NotFoundException, InternalException;
+    /**
+     * Requests all beacons information on the specified genetic mutation.<p>
+     * The response on the query will be put in {@link BeaconResponseDto#response}.<p>
+     * {@link BeaconResponseDto#response} - true, when the response is YES.<p>
+     * {@link BeaconResponseDto#response} - false or null, when the response is NO, or the beacon had problems answering
+     * the query.
+     */
+    BeaconResponseDto getResponse(ChromosomeDto chromosome, Long position, AlleleDto allele,
+                                  ReferenceDto reference, String beaconId) throws ForbiddenException, NotFoundException,
+            InternalException;
 }

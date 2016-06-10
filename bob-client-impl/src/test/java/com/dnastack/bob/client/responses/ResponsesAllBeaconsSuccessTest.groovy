@@ -17,7 +17,6 @@
 package com.dnastack.bob.client.responses
 
 import com.dnastack.bob.client.BaseMockedBobTest
-import com.dnastack.bob.client.CommunicationConverter
 import com.dnastack.bob.service.dto.AlleleDto
 import com.github.tomakehurst.wiremock.common.Json
 
@@ -30,10 +29,9 @@ import static org.assertj.core.api.Assertions.assertThat
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-class ResponsesSuccessTest extends BaseMockedBobTest {
+class ResponsesAllBeaconsSuccessTest extends BaseMockedBobTest {
     void setupMappings() {
         MOCK_BOB_SERVER.stubFor(get(urlPathEqualTo("/$RESPONSES_PATH"))
-                .withQueryParam(BEACONS_IDS_LIST_KEY, equalTo(CommunicationConverter.convertToString(TEST_RESPONSES.beacon.id as List)))
                 .withQueryParam(ALLELE_KEY, equalTo(TEST_RESPONSES.query.first().allele))
                 .withQueryParam(CHROMOSOME_KEY, equalTo(TEST_RESPONSES.query.first().chromosome.toString()))
                 .withQueryParam(POSITION_KEY, equalTo(TEST_RESPONSES.query.first().position.toString()))
@@ -50,7 +48,7 @@ class ResponsesSuccessTest extends BaseMockedBobTest {
                 TEST_RESPONSES.query.first().position,
                 AlleleDto.fromString(TEST_RESPONSES.query.first().allele),
                 TEST_RESPONSES.query.first().reference,
-                TEST_RESPONSES.beacon.id as List)
+                null)
         assertThat(responses).isEqualTo(TEST_RESPONSES);
     }
 }

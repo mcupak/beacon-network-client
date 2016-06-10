@@ -32,9 +32,9 @@ import static org.assertj.core.api.Assertions.assertThat
 class ResponseSuccessTest extends BaseMockedBobTest {
     void setupMappings() {
         MOCK_BOB_SERVER.stubFor(get(urlPathEqualTo("/$RESPONSES_PATH/$TEST_RESPONSE_AMPLAB.beacon.name"))
-                .withQueryParam(ALLELE_KEY, equalTo(TEST_RESPONSE_AMPLAB.query.allele))
                 .withQueryParam(CHROMOSOME_KEY, equalTo(TEST_RESPONSE_AMPLAB.query.chromosome.toString()))
                 .withQueryParam(POSITION_KEY, equalTo(TEST_RESPONSE_AMPLAB.query.position.toString()))
+                .withQueryParam(ALLELE_KEY, equalTo(TEST_RESPONSE_AMPLAB.query.allele))
                 .withQueryParam(REFERENCE_KEY, equalTo(TEST_RESPONSE_AMPLAB.query.reference.toString()))
 
                 .willReturn(aResponse()
@@ -43,11 +43,12 @@ class ResponseSuccessTest extends BaseMockedBobTest {
     }
 
     void doTest() {
-        def response = CLIENT.getResponse(TEST_RESPONSE_AMPLAB.beacon.name,
-                AlleleDto.fromString(TEST_RESPONSE_AMPLAB.query.allele),
+        def response = CLIENT.getResponse(
                 TEST_RESPONSE_AMPLAB.query.chromosome,
                 TEST_RESPONSE_AMPLAB.query.position,
-                TEST_RESPONSE_AMPLAB.query.reference)
+                AlleleDto.fromString(TEST_RESPONSE_AMPLAB.query.allele),
+                TEST_RESPONSE_AMPLAB.query.reference,
+                TEST_RESPONSE_AMPLAB.beacon.name)
         assertThat(response).isEqualTo(TEST_RESPONSE_AMPLAB);
     }
 }
