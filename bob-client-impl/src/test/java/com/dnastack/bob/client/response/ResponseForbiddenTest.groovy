@@ -16,15 +16,15 @@
 
 package com.dnastack.bob.client.response
 
-import com.dnastack.bob.client.BaseMockedBobTest
+import com.dnastack.bob.client.BaseBobTest
 import com.dnastack.bob.client.exceptions.ForbiddenException
 import com.dnastack.bob.service.dto.AlleleDto
 import com.github.tomakehurst.wiremock.common.Json
 import org.apache.http.HttpStatus
 
 import static com.dnastack.bob.client.BeaconNetworkRetroService.*
+import static com.dnastack.bob.client.ITTestData.TEST_RESPONSE_AMPLAB
 import static com.dnastack.bob.client.TestData.TEST_ERROR_FORBIDDEN
-import static com.dnastack.bob.client.TestData.TEST_RESPONSE_AMPLAB
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 import static org.assertj.core.api.Assertions.assertThat
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown
@@ -33,9 +33,10 @@ import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-class ResponseForbiddenTest extends BaseMockedBobTest {
+class ResponseForbiddenTest extends BaseBobTest {
+    @Override
     void setupMappings() {
-        MOCK_BOB_SERVER.stubFor(get(urlPathEqualTo("/$RESPONSES_PATH/$TEST_RESPONSE_AMPLAB.beacon.name"))
+        MOCK_BOB_SERVER.stubFor(get(urlPathEqualTo("/$RESPONSES_PATH/$TEST_RESPONSE_AMPLAB.beacon.id"))
                 .withQueryParam(CHROMOSOME_KEY, equalTo(TEST_RESPONSE_AMPLAB.query.chromosome.toString()))
                 .withQueryParam(POSITION_KEY, equalTo(TEST_RESPONSE_AMPLAB.query.position.toString()))
                 .withQueryParam(ALLELE_KEY, equalTo(TEST_RESPONSE_AMPLAB.query.allele))
@@ -46,6 +47,12 @@ class ResponseForbiddenTest extends BaseMockedBobTest {
                 .withBody(Json.write(TEST_ERROR_FORBIDDEN))))
     }
 
+    @Override
+    boolean isIntegrationTestingSupported() {
+        return false
+    }
+
+    @Override
     void doTest() {
         try {
             CLIENT.getResponse(
@@ -53,7 +60,7 @@ class ResponseForbiddenTest extends BaseMockedBobTest {
                     TEST_RESPONSE_AMPLAB.query.position,
                     AlleleDto.fromString(TEST_RESPONSE_AMPLAB.query.allele),
                     TEST_RESPONSE_AMPLAB.query.reference,
-                    TEST_RESPONSE_AMPLAB.beacon.name)
+                    TEST_RESPONSE_AMPLAB.beacon.id)
             failBecauseExceptionWasNotThrown(ForbiddenException.class)
         } catch (Throwable thrown) {
             assertThat(thrown).isInstanceOf(ForbiddenException.class)

@@ -16,7 +16,7 @@
 
 package com.dnastack.bob.client.organizations
 
-import com.dnastack.bob.client.BaseMockedBobTest
+import com.dnastack.bob.client.BaseBobTest
 import com.github.tomakehurst.wiremock.common.Json
 
 import static com.dnastack.bob.client.BeaconNetworkRetroService.ORGANIZATIONS_PATH
@@ -28,7 +28,8 @@ import static org.assertj.core.api.Assertions.assertThat
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-class OrganizationsSuccessTest extends BaseMockedBobTest {
+class OrganizationsSuccessTest extends BaseBobTest {
+    @Override
     void setupMappings() {
         MOCK_BOB_SERVER.stubFor(get(urlEqualTo("/$ORGANIZATIONS_PATH"))
 
@@ -36,8 +37,11 @@ class OrganizationsSuccessTest extends BaseMockedBobTest {
                 .withBody(Json.write(TEST_ORGANIZATIONS))))
     }
 
+    @Override
     void doTest() {
         def organizations = CLIENT.getOrganizations();
-        assertThat(organizations).isEqualTo(TEST_ORGANIZATIONS);
+        if (MOCKED_TESTING) {
+            assertThat(organizations).isEqualTo(TEST_ORGANIZATIONS);
+        }
     }
 }

@@ -16,12 +16,12 @@
 
 package com.dnastack.bob.client.responses
 
-import com.dnastack.bob.client.BaseMockedBobTest
+import com.dnastack.bob.client.BaseBobTest
 import com.dnastack.bob.service.dto.AlleleDto
 import com.github.tomakehurst.wiremock.common.Json
 
 import static com.dnastack.bob.client.BeaconNetworkRetroService.*
-import static com.dnastack.bob.client.TestData.TEST_RESPONSES
+import static com.dnastack.bob.client.ITTestData.TEST_RESPONSES
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 import static org.assertj.core.api.Assertions.assertThat
 
@@ -29,7 +29,8 @@ import static org.assertj.core.api.Assertions.assertThat
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-class ResponsesAllBeaconsSuccessTest extends BaseMockedBobTest {
+class ResponsesAllBeaconsSuccessTest extends BaseBobTest {
+    @Override
     void setupMappings() {
         MOCK_BOB_SERVER.stubFor(get(urlPathEqualTo("/$RESPONSES_PATH"))
                 .withQueryParam(ALLELE_KEY, equalTo(TEST_RESPONSES.query.first().allele))
@@ -42,6 +43,7 @@ class ResponsesAllBeaconsSuccessTest extends BaseMockedBobTest {
 
     }
 
+    @Override
     void doTest() {
         def responses = CLIENT.getResponses(
                 TEST_RESPONSES.query.first().chromosome,
@@ -49,6 +51,8 @@ class ResponsesAllBeaconsSuccessTest extends BaseMockedBobTest {
                 AlleleDto.fromString(TEST_RESPONSES.query.first().allele),
                 TEST_RESPONSES.query.first().reference,
                 null)
-        assertThat(responses).isEqualTo(TEST_RESPONSES);
+        if (MOCKED_TESTING) {
+            assertThat(responses).isEqualTo(TEST_RESPONSES)
+        }
     }
 }

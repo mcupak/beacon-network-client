@@ -50,8 +50,6 @@ public interface BeaconNetworkClient {
      * Shows information on the organization specified by its id.
      */
     OrganizationDto getOrganization(String organizationId) throws ForbiddenException, NotFoundException, InternalException;
-    /*specified by chromosome, position,
-            * allele and reference.</p>*/
 
     /**
      * Requests specified beacons information on the specified genetic mutation.<p>

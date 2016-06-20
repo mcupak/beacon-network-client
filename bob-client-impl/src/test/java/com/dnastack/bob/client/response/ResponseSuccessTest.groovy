@@ -16,12 +16,12 @@
 
 package com.dnastack.bob.client.response
 
-import com.dnastack.bob.client.BaseMockedBobTest
+import com.dnastack.bob.client.BaseBobTest
 import com.dnastack.bob.service.dto.AlleleDto
 import com.github.tomakehurst.wiremock.common.Json
 
 import static com.dnastack.bob.client.BeaconNetworkRetroService.*
-import static com.dnastack.bob.client.TestData.TEST_RESPONSE_AMPLAB
+import static com.dnastack.bob.client.ITTestData.TEST_RESPONSE_AMPLAB
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 import static org.assertj.core.api.Assertions.assertThat
 
@@ -29,9 +29,10 @@ import static org.assertj.core.api.Assertions.assertThat
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-class ResponseSuccessTest extends BaseMockedBobTest {
+class ResponseSuccessTest extends BaseBobTest {
+    @Override
     void setupMappings() {
-        MOCK_BOB_SERVER.stubFor(get(urlPathEqualTo("/$RESPONSES_PATH/$TEST_RESPONSE_AMPLAB.beacon.name"))
+        MOCK_BOB_SERVER.stubFor(get(urlPathEqualTo("/$RESPONSES_PATH/$TEST_RESPONSE_AMPLAB.beacon.id"))
                 .withQueryParam(CHROMOSOME_KEY, equalTo(TEST_RESPONSE_AMPLAB.query.chromosome.toString()))
                 .withQueryParam(POSITION_KEY, equalTo(TEST_RESPONSE_AMPLAB.query.position.toString()))
                 .withQueryParam(ALLELE_KEY, equalTo(TEST_RESPONSE_AMPLAB.query.allele))
@@ -42,13 +43,14 @@ class ResponseSuccessTest extends BaseMockedBobTest {
 
     }
 
+    @Override
     void doTest() {
         def response = CLIENT.getResponse(
                 TEST_RESPONSE_AMPLAB.query.chromosome,
                 TEST_RESPONSE_AMPLAB.query.position,
                 AlleleDto.fromString(TEST_RESPONSE_AMPLAB.query.allele),
                 TEST_RESPONSE_AMPLAB.query.reference,
-                TEST_RESPONSE_AMPLAB.beacon.name)
+                TEST_RESPONSE_AMPLAB.beacon.id)
         assertThat(response).isEqualTo(TEST_RESPONSE_AMPLAB);
     }
 }
