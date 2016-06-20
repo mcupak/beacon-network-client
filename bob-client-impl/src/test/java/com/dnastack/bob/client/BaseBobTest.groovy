@@ -40,12 +40,11 @@ abstract class BaseBobTest {
      */
     static {
         def beaconNetworkTestUrl = System.properties.getProperty("beaconNetwork.test.url")
-        def integrationTesting = StringUtils.isNotBlank(beaconNetworkTestUrl)
+        MOCKED_TESTING = StringUtils.isBlank(beaconNetworkTestUrl)
+        CLIENT = MOCKED_TESTING ?
+                new BeaconNetworkClientImpl(new URL("http", "localhost", MOCK_BOB_PORT, "")) :
+                new BeaconNetworkClientImpl(beaconNetworkTestUrl)
 
-        MOCKED_TESTING = !integrationTesting
-        CLIENT = integrationTesting ?
-                new BeaconNetworkClientImpl(beaconNetworkTestUrl) :
-                new BeaconNetworkClientImpl(new URL("http", "localhost", MOCK_BOB_PORT, ""))
     }
 
     @BeforeSuite
