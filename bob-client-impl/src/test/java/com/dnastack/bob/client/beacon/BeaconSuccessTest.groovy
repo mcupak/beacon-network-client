@@ -16,11 +16,11 @@
 
 package com.dnastack.bob.client.beacon
 
-import com.dnastack.bob.client.BaseMockedBobTest
+import com.dnastack.bob.client.BaseBobTest
 import com.github.tomakehurst.wiremock.common.Json
 
 import static com.dnastack.bob.client.BeaconNetworkRetroService.BEACONS_PATH
-import static com.dnastack.bob.client.TestData.TEST_BEACON_AMPLAB
+import static com.dnastack.bob.client.ITTestData.TEST_BEACON_AMPLAB
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 import static org.assertj.core.api.Assertions.assertThat
 
@@ -28,7 +28,8 @@ import static org.assertj.core.api.Assertions.assertThat
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-class BeaconSuccessTest extends BaseMockedBobTest {
+class BeaconSuccessTest extends BaseBobTest {
+    @Override
     void setupMappings() {
         MOCK_BOB_SERVER.stubFor(get(urlEqualTo("/$BEACONS_PATH/$TEST_BEACON_AMPLAB.id"))
 
@@ -36,6 +37,7 @@ class BeaconSuccessTest extends BaseMockedBobTest {
                 .withBody(Json.write(TEST_BEACON_AMPLAB))))
     }
 
+    @Override
     void doTest() {
         def beacon = CLIENT.getBeacon(TEST_BEACON_AMPLAB.id);
         assertThat(beacon).isEqualTo(TEST_BEACON_AMPLAB);

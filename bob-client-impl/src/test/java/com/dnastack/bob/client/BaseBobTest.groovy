@@ -17,7 +17,7 @@
 package com.dnastack.bob.client
 
 import com.github.tomakehurst.wiremock.WireMockServer
-import org.slf4j.LoggerFactory
+import org.apache.commons.lang.StringUtils
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.AfterSuite
 import org.testng.annotations.BeforeSuite
@@ -29,39 +29,60 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-abstract class BaseMockedBobTest {
-    static final def log = LoggerFactory.getLogger(getClass())
-
+abstract class BaseBobTest {
     static final def MOCK_BOB_PORT = 8089
-    static final def MOCK_BOB_SERVER = new WireMockServer(
-            wireMockConfig().port(MOCK_BOB_PORT)
-    )
-    static final def CLIENT = new BeaconNetworkClientImpl(
-            new URL("http", "localhost", MOCK_BOB_PORT, "")
-    )
+    static final def MOCK_BOB_SERVER = new WireMockServer(wireMockConfig().port(MOCK_BOB_PORT))
+    static final def CLIENT
+    static final boolean MOCKED_TESTING
+
+    /**
+     * Define if the testing will be against real Beacon Network server, or the mocked one.
+     */
+    static {
+        def beaconNetworkTestUrl = System.properties.getProperty("beaconNetwork.test.url")
+        MOCKED_TESTING = StringUtils.isBlank(beaconNetworkTestUrl)
+        CLIENT = MOCKED_TESTING ?
+                new BeaconNetworkClientImpl(new URL("http", "localhost", MOCK_BOB_PORT, "")) :
+                new BeaconNetworkClientImpl(beaconNetworkTestUrl)
+
+    }
 
     @BeforeSuite
     void startServer() {
-        MOCK_BOB_SERVER.start();
+        if (MOCKED_TESTING) {
+            MOCK_BOB_SERVER.start();
+        }
     }
 
     @AfterSuite
     void stopServer() {
-        MOCK_BOB_SERVER.stop();
+        if (MOCKED_TESTING) {
+            MOCK_BOB_SERVER.stop();
+        }
     }
 
     @AfterMethod
     void resetMappings() {
-        MOCK_BOB_SERVER.resetMappings();
+        if (MOCKED_TESTING) {
+            MOCK_BOB_SERVER.resetMappings();
+        }
     }
 
     @Test
     void test() {
-        setupMappings()
+        if (!MOCKED_TESTING && !isIntegrationTestingSupported()) {
+            return
+        }
+
+        if (MOCKED_TESTING) {
+            setupMappings()
+        }
         doTest()
     }
 
     void setupMappings() {}
+
+    boolean isIntegrationTestingSupported() { return true }
 
     abstract void doTest();
 }

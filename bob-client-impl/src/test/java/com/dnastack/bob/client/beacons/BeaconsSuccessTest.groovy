@@ -16,7 +16,7 @@
 
 package com.dnastack.bob.client.beacons
 
-import com.dnastack.bob.client.BaseMockedBobTest
+import com.dnastack.bob.client.BaseBobTest
 import com.github.tomakehurst.wiremock.common.Json
 
 import static com.dnastack.bob.client.BeaconNetworkRetroService.BEACONS_PATH
@@ -28,7 +28,8 @@ import static org.assertj.core.api.Assertions.assertThat
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-class BeaconsSuccessTest extends BaseMockedBobTest {
+class BeaconsSuccessTest extends BaseBobTest {
+    @Override
     void setupMappings() {
         MOCK_BOB_SERVER.stubFor(get(urlEqualTo("/$BEACONS_PATH"))
 
@@ -36,8 +37,11 @@ class BeaconsSuccessTest extends BaseMockedBobTest {
                 .withBody(Json.write(TEST_BEACONS))))
     }
 
+    @Override
     void doTest() {
         def beacons = CLIENT.getBeacons();
-        assertThat(beacons).isEqualTo(TEST_BEACONS);
+        if (MOCKED_TESTING) {
+            assertThat(beacons).isEqualTo(TEST_BEACONS);
+        }
     }
 }

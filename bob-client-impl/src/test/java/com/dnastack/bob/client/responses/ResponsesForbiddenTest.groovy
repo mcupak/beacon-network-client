@@ -16,7 +16,7 @@
 
 package com.dnastack.bob.client.responses
 
-import com.dnastack.bob.client.BaseMockedBobTest
+import com.dnastack.bob.client.BaseBobTest
 import com.dnastack.bob.client.CommunicationConverter
 import com.dnastack.bob.client.exceptions.ForbiddenException
 import com.dnastack.bob.service.dto.AlleleDto
@@ -24,8 +24,8 @@ import com.github.tomakehurst.wiremock.common.Json
 import org.apache.http.HttpStatus
 
 import static com.dnastack.bob.client.BeaconNetworkRetroService.*
+import static com.dnastack.bob.client.ITTestData.TEST_RESPONSES
 import static com.dnastack.bob.client.TestData.TEST_ERROR_FORBIDDEN
-import static com.dnastack.bob.client.TestData.TEST_RESPONSES
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 import static org.assertj.core.api.Assertions.assertThat
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown
@@ -34,7 +34,8 @@ import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-class ResponsesForbiddenTest extends BaseMockedBobTest {
+class ResponsesForbiddenTest extends BaseBobTest {
+    @Override
     void setupMappings() {
         MOCK_BOB_SERVER.stubFor(get(urlPathEqualTo("/$RESPONSES_PATH"))
                 .withQueryParam(CHROMOSOME_KEY, equalTo(TEST_RESPONSES.query.first().chromosome.toString()))
@@ -49,6 +50,12 @@ class ResponsesForbiddenTest extends BaseMockedBobTest {
 
     }
 
+    @Override
+    boolean isIntegrationTestingSupported() {
+        return false
+    }
+
+    @Override
     void doTest() {
         try {
             CLIENT.getResponses(

@@ -16,13 +16,13 @@
 
 package com.dnastack.bob.client.beacon
 
-import com.dnastack.bob.client.BaseMockedBobTest
+import com.dnastack.bob.client.BaseBobTest
 import com.dnastack.bob.client.exceptions.ForbiddenException
 import com.github.tomakehurst.wiremock.common.Json
 import org.apache.http.HttpStatus
 
 import static com.dnastack.bob.client.BeaconNetworkRetroService.BEACONS_PATH
-import static com.dnastack.bob.client.TestData.TEST_BEACON_AMPLAB
+import static com.dnastack.bob.client.ITTestData.TEST_BEACON_AMPLAB
 import static com.dnastack.bob.client.TestData.TEST_ERROR_FORBIDDEN
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 import static org.assertj.core.api.Assertions.assertThat
@@ -32,7 +32,8 @@ import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-class BeaconForbiddenTest extends BaseMockedBobTest {
+class BeaconForbiddenTest extends BaseBobTest {
+    @Override
     void setupMappings() {
         MOCK_BOB_SERVER.stubFor(get(urlEqualTo("/$BEACONS_PATH/$TEST_BEACON_AMPLAB.id"))
 
@@ -41,6 +42,12 @@ class BeaconForbiddenTest extends BaseMockedBobTest {
                 .withBody(Json.write(TEST_ERROR_FORBIDDEN))))
     }
 
+    @Override
+    boolean isIntegrationTestingSupported() {
+        return false
+    }
+
+    @Override
     void doTest() {
         try {
             CLIENT.getBeacon(TEST_BEACON_AMPLAB.id)

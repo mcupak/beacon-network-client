@@ -16,11 +16,11 @@
 
 package com.dnastack.bob.client.organization
 
-import com.dnastack.bob.client.BaseMockedBobTest
+import com.dnastack.bob.client.BaseBobTest
 import com.github.tomakehurst.wiremock.common.Json
 
 import static com.dnastack.bob.client.BeaconNetworkRetroService.ORGANIZATIONS_PATH
-import static com.dnastack.bob.client.TestData.TEST_ORGANIZATION_AMPLAB
+import static com.dnastack.bob.client.ITTestData.TEST_ORGANIZATION_AMPLAB
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 import static org.assertj.core.api.Assertions.assertThat
 
@@ -28,7 +28,8 @@ import static org.assertj.core.api.Assertions.assertThat
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-class OrganizationSuccessTest extends BaseMockedBobTest {
+class OrganizationSuccessTest extends BaseBobTest {
+    @Override
     void setupMappings() {
         MOCK_BOB_SERVER.stubFor(get(urlEqualTo("/$ORGANIZATIONS_PATH/$TEST_ORGANIZATION_AMPLAB.id"))
 
@@ -36,6 +37,7 @@ class OrganizationSuccessTest extends BaseMockedBobTest {
                 .withBody(Json.write(TEST_ORGANIZATION_AMPLAB))))
     }
 
+    @Override
     void doTest() {
         def organization = CLIENT.getOrganization(TEST_ORGANIZATION_AMPLAB.id);
         assertThat(organization).isEqualTo(TEST_ORGANIZATION_AMPLAB);

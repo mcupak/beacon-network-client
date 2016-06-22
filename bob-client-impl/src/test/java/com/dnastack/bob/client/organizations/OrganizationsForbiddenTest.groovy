@@ -16,7 +16,7 @@
 
 package com.dnastack.bob.client.organizations
 
-import com.dnastack.bob.client.BaseMockedBobTest
+import com.dnastack.bob.client.BaseBobTest
 import com.dnastack.bob.client.exceptions.ForbiddenException
 import com.github.tomakehurst.wiremock.common.Json
 import org.apache.http.HttpStatus
@@ -31,7 +31,8 @@ import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown
  * @author Artem (tema.voskoboynick@gmail.com)
  * @version 1.0
  */
-class OrganizationsForbiddenTest extends BaseMockedBobTest {
+class OrganizationsForbiddenTest extends BaseBobTest {
+    @Override
     void setupMappings() {
         MOCK_BOB_SERVER.stubFor(get(urlEqualTo("/$ORGANIZATIONS_PATH"))
 
@@ -40,6 +41,12 @@ class OrganizationsForbiddenTest extends BaseMockedBobTest {
                 .withBody(Json.write(TEST_ERROR_FORBIDDEN))))
     }
 
+    @Override
+    boolean isIntegrationTestingSupported() {
+        return false
+    }
+
+    @Override
     void doTest() {
         try {
             CLIENT.getOrganizations()
