@@ -38,8 +38,8 @@
 
     <licenses>
         <license>
-            <name>MIT License</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <name>Apache 2 License</name>
+            <url>https://raw.githubusercontent.com/mcupak/beacon-network-client/develop/LICENSE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>

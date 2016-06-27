@@ -1,0 +1,11 @@
+language: java
+sudo: false
+jdk:
+  - oraclejdk8
+branches:
+  only:
+    - master
+    - develop
+before_install:
+  - git clone https://github.com/mcupak/beacon-network-dto.git beacon-network-dto
+  - mvn install -q -f beacon-network-dto/pom.xml
