@@ -41,3 +41,6 @@ mvn test -P it -DbeaconNetwork.test.url=[server_url].
 BeaconNetworkClient bnc = new BeaconNetworkClientImpl();
 BeaconResponseDto response = bnc.getResponse(ChromosomeDto.CHR13, 32936732L, AlleleDto.C, ReferenceDto.HG19, "amplab");
 ```
+
+## Documentation
+- [Javadoc](https://mcupak.github.io/beacon-network-client/)
