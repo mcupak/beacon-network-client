@@ -25,6 +25,7 @@ package com.dnastack.bob.client.exceptions;
  * @version 1.0
  */
 public class InternalException extends Exception {
+
     public InternalException(String message) {
         super(message);
     }

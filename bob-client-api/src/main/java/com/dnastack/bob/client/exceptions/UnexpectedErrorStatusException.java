@@ -24,9 +24,10 @@ package com.dnastack.bob.client.exceptions;
  * @version 1.0
  */
 public class UnexpectedErrorStatusException extends InternalException {
+
     public UnexpectedErrorStatusException(String rawErrorStatus, String errorMessage) {
-        super(String.format(
-                "Received known, but unexpected error status from server. Status %s. Server message: %s.",
-                rawErrorStatus, errorMessage));
+        super(String.format("Received known, but unexpected error status from server. Status %s. Server message: %s.",
+                            rawErrorStatus,
+                            errorMessage));
     }
 }

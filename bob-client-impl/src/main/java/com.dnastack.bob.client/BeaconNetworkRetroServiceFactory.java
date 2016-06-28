@@ -36,46 +36,50 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  */
 public class BeaconNetworkRetroServiceFactory {
+
     /**
      * JacksonConverterFactory is thread-safe. Can declare it static.
      */
-    private static final JacksonConverterFactory JACKSON_CONVERTER_FACTORY = JacksonConverterFactory
-            .create(new BeaconNetworkObjectMapper());
+    private static final JacksonConverterFactory JACKSON_CONVERTER_FACTORY = JacksonConverterFactory.create(new BeaconNetworkObjectMapper());
 
     /**
      * OkHttpClient is thread-safe. Can declare it static.
      * Set read timeout to 5 minutes as querying beacons may take quite a long time.
      */
-    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
-            .readTimeout(5, TimeUnit.MINUTES)
-            .addNetworkInterceptor(chain -> {
-                Request request = chain.request().newBuilder()
-                        .addHeader("Accept", "application/json")
-                        .build();
-                return chain.proceed(request);
-            }).build();
+    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder().readTimeout(5, TimeUnit.MINUTES)
+                                                                              .addNetworkInterceptor(chain -> {
+                                                                                  Request request = chain.request()
+                                                                                                         .newBuilder()
+                                                                                                         .addHeader(
+                                                                                                                 "Accept",
+                                                                                                                 "application/json")
+                                                                                                         .build();
+                                                                                  return chain.proceed(request);
+                                                                              })
+                                                                              .build();
 
-    private BeaconNetworkRetroServiceFactory() {
+    private static final class BeaconNetworkObjectMapper extends ObjectMapper {
+
+        public BeaconNetworkObjectMapper() {
+            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        }
     }
 
     public static BeaconNetworkRetroService create(String serviceBaseUrl) {
-        return new Retrofit.Builder()
-                .client(HTTP_CLIENT)
-                .addConverterFactory(JACKSON_CONVERTER_FACTORY)
-                .baseUrl(serviceBaseUrl)
-                .build()
-                .create(BeaconNetworkRetroService.class);
+        return new Retrofit.Builder().client(HTTP_CLIENT)
+                                     .addConverterFactory(JACKSON_CONVERTER_FACTORY)
+                                     .baseUrl(serviceBaseUrl)
+                                     .build()
+                                     .create(BeaconNetworkRetroService.class);
     }
 
     public static <T> Converter<ResponseBody, T> getResponseConverter(Class<T> clazz) {
         //noinspection unchecked
-        return (Converter<ResponseBody, T>) JACKSON_CONVERTER_FACTORY
-                .responseBodyConverter(clazz, new Annotation[0], null);
+        return (Converter<ResponseBody, T>) JACKSON_CONVERTER_FACTORY.responseBodyConverter(clazz,
+                                                                                            new Annotation[0],
+                                                                                            null);
     }
 
-    private static final class BeaconNetworkObjectMapper extends ObjectMapper {
-        public BeaconNetworkObjectMapper() {
-            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        }
+    private BeaconNetworkRetroServiceFactory() {
     }
 }

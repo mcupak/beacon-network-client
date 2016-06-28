@@ -31,10 +31,6 @@ public enum ErrorStatus {
 
     private String id;
 
-    ErrorStatus(String id) {
-        this.id = id;
-    }
-
     public static ErrorStatus fromString(String id) {
         if (id != null) {
             for (ErrorStatus errorStatus : ErrorStatus.values()) {
@@ -44,6 +40,10 @@ public enum ErrorStatus {
             }
         }
         return null;
+    }
+
+    ErrorStatus(String id) {
+        this.id = id;
     }
 
     @Override

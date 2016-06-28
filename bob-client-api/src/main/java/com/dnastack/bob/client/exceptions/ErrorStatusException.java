@@ -23,6 +23,7 @@ package com.dnastack.bob.client.exceptions;
  * @version 1.0
  */
 public class ErrorStatusException extends Exception {
+
     public ErrorStatusException(String message) {
         super(message);
     }

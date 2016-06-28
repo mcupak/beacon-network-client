@@ -23,6 +23,7 @@ package com.dnastack.bob.client.exceptions;
  * @version 1.0
  */
 public class ForbiddenException extends ErrorStatusException {
+
     public ForbiddenException(String message) {
         super(message);
     }

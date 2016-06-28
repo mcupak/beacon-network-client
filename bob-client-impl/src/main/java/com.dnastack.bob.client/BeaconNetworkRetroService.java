@@ -31,6 +31,7 @@ import java.util.List;
  * @version 1.0
  */
 public interface BeaconNetworkRetroService {
+
     String BEACONS_PATH = "beacons";
     String ORGANIZATIONS_PATH = "organizations";
     String RESPONSES_PATH = "responses";
@@ -40,7 +41,6 @@ public interface BeaconNetworkRetroService {
     String POSITION_KEY = "pos";
     String ALLELE_KEY = "allele";
     String REFERENCE_KEY = "ref";
-
 
     @GET(BEACONS_PATH)
     Call<List<BeaconDto>> getBeacons();
@@ -55,16 +55,8 @@ public interface BeaconNetworkRetroService {
     Call<OrganizationDto> getOrganization(@Path("organizationId") String organizationId);
 
     @GET(RESPONSES_PATH)
-    Call<List<BeaconResponseDto>> getResponses(@Query(CHROMOSOME_KEY) ChromosomeDto chromosome,
-                                               @Query(POSITION_KEY) Long position,
-                                               @Query(ALLELE_KEY) AlleleDto allele,
-                                               @Query(REFERENCE_KEY) ReferenceDto reference,
-                                               @Query(BEACONS_IDS_LIST_KEY) String beaconsIdsList);
+    Call<List<BeaconResponseDto>> getResponses(@Query(CHROMOSOME_KEY) ChromosomeDto chromosome, @Query(POSITION_KEY) Long position, @Query(ALLELE_KEY) AlleleDto allele, @Query(REFERENCE_KEY) ReferenceDto reference, @Query(BEACONS_IDS_LIST_KEY) String beaconsIdsList);
 
     @GET(RESPONSES_PATH + "/{beaconId}")
-    Call<BeaconResponseDto> getResponse(@Path("beaconId") String beaconId,
-                                        @Query(CHROMOSOME_KEY) ChromosomeDto chromosome,
-                                        @Query(POSITION_KEY) Long position,
-                                        @Query(ALLELE_KEY) AlleleDto allele,
-                                        @Query(REFERENCE_KEY) ReferenceDto reference);
+    Call<BeaconResponseDto> getResponse(@Path("beaconId") String beaconId, @Query(CHROMOSOME_KEY) ChromosomeDto chromosome, @Query(POSITION_KEY) Long position, @Query(ALLELE_KEY) AlleleDto allele, @Query(REFERENCE_KEY) ReferenceDto reference);
 }

@@ -25,6 +25,7 @@ package com.dnastack.bob.client.exceptions;
  * @version 1.0
  */
 public class BeaconNetworkClientException extends Exception {
+
     public BeaconNetworkClientException(String message) {
         super(message);
     }

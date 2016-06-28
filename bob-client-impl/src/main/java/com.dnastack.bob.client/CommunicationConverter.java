@@ -28,15 +28,13 @@ import java.util.List;
  * @version 1.0
  */
 public class CommunicationConverter {
+
     /**
      * Converter is obtained from JacksonConverterFactory, which is thread-safe
      * and returns thread-safe converters. Can declare it static.
      */
-    private static final retrofit2.Converter<ResponseBody, ErrorDto> ERROR_RESPONSE_CONVERTER =
-            BeaconNetworkRetroServiceFactory.getResponseConverter(ErrorDto.class);
-
-    private CommunicationConverter() {
-    }
+    private static final retrofit2.Converter<ResponseBody, ErrorDto> ERROR_RESPONSE_CONVERTER = BeaconNetworkRetroServiceFactory
+            .getResponseConverter(ErrorDto.class);
 
     public static ErrorDto convertToErrorDto(ResponseBody responseBody) throws IOException {
         return ERROR_RESPONSE_CONVERTER.convert(responseBody);
@@ -61,5 +59,8 @@ public class CommunicationConverter {
         result.append("]");
 
         return result.toString();
+    }
+
+    private CommunicationConverter() {
     }
 }

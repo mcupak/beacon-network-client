@@ -23,6 +23,7 @@ package com.dnastack.bob.client.exceptions;
  * @version 1.0
  */
 public class NotFoundException extends ErrorStatusException {
+
     public NotFoundException(String message) {
         super(message);
     }
